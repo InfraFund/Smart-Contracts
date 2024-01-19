@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {LibInfraFundStorage} from "../libraries/LibInfraFundStorage.sol";
+import { LibInfraFundStorage } from "../libraries/LibInfraFundStorage.sol";
+import { IAuditor } from "../interfaces/IAuditor.sol";
 
-contract Auditor {
+contract Auditor is IAuditor { 
 
-    event VerifyProposal(address indexed auditor, string indexed _hashProposal);
+    event VerifyProposal(address  indexed auditor, string indexed _hashProposal);
 
-    function verifyProposla(string memory _hashProposal) external {
+    function verifyProposal(string memory _hashProposal) external {
             
         LibInfraFundStorage.InfraFundStorage storage infraStorage = LibInfraFundStorage.infraFundStorage();
 
