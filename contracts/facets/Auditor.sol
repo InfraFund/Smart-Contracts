@@ -6,16 +6,14 @@ import { IAuditor } from "../interfaces/IAuditor.sol";
 
 contract Auditor is IAuditor { 
 
-    event VerifyProposal(address  indexed auditor, string indexed _hashProposal);
+    event VerifyProposal(address indexed auditor, string indexed _hashProposal);
 
     function verifyProposal(string memory _hashProposal) external {
             
-        LibInfraFundStorage.InfraFundStorage storage infraStorage = LibInfraFundStorage.infraFundStorage();
+        require(LibInfraFundStorage.isAuditor(msg.sender), "Your Not Auditor");
+        require(!LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].isVerified, "Your proposal already verified");
 
-        require(infraStorage.auditors[msg.sender], "Your Not Auditor");
-        require(!infraStorage.charityProjects[_hashProposal].isVerified, "Your proposal already verified");
-
-        infraStorage.charityProjects[_hashProposal].isVerified = true;
+        LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].isVerified = true;
 
         emit VerifyProposal(msg.sender, _hashProposal);
     }
