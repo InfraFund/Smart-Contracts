@@ -43,7 +43,8 @@ contract CharityProposal {
 
         require(infraStorage.verifiedClients[msg.sender], "Not White Listed");
         require(infraStorage.charityProjects[_oldHashProposal].proposer == msg.sender, "You are not proposer for this proposal");
-       
+        require(!infraStorage.charityProjects[_oldHashProposal].isVerified, "Your proposal already verified , cant change current proposal");
+
         infraStorage.charityProjects[_newHashProposal] = infraStorage.charityProjects[_oldHashProposal];
         
         emit ModifyCharityProposal(_oldHashProposal, _newHashProposal);
