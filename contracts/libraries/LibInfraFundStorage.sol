@@ -12,7 +12,7 @@
             address contractAddress;
             address GC;
             uint startTime;
-            uint expireTime;
+            uint duration;
             uint targetAmount;
             bool isVerified;
         }
@@ -44,6 +44,23 @@
         }
 
 
+        function isAuditor(address _auditor) internal view returns(bool) {
+            return infraFundStorage().auditors[_auditor]; 
+        }
+
+        function isInvestor(address _investor) internal view returns(bool) {
+            return infraFundStorage().investors[_investor]; 
+        }
+        
+        function isGC(address _GC) internal view returns(bool) {
+            return infraFundStorage().generalConstructors[_GC]; 
+        }
+
+        function isVerifiedClient(address _client) internal view returns(bool) {
+            return infraFundStorage().verifiedClients[_client]; 
+        }
+
+
 
         struct InfraFundStorage {
 
@@ -51,13 +68,17 @@
             uint256 proposalFee;
 
             mapping(address => bool) verifiedClients;
-            mapping(string => CharityProject) charityProjects;
             mapping(address => bool) auditors;
+            mapping(address => bool) investors;
+            mapping(address => bool) generalConstructors;
+
+            mapping(string => CharityProject) charityProjects;
             mapping(string =>  GCProposal) gcProposals;
+            
             address contractOwner;
 
         }
-
+ 
 
         function infraFundStorage() internal pure returns (InfraFundStorage storage st) {
             bytes32 position = STORAGE_POSITION;
