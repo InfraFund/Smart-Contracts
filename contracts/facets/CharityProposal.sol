@@ -19,11 +19,9 @@ contract  CharityProposal is ICharityProposal {
         uint256 _duration 
         ) external {
             
-        LibInfraFundStorage.InfraFundStorage storage infraStorage = LibInfraFundStorage.infraFundStorage();
+        require(LibInfraFundStorage.infraFundStorage().verifiedClients[msg.sender], "Not White Listed");
 
-        require(infraStorage.verifiedClients[msg.sender], "Not White Listed");
-
-        infraStorage.charityProjects[_hashProposal] = LibInfraFundStorage.CharityProject(
+        LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal] = LibInfraFundStorage.CharityProject(
             _name,
             _symbol,
             msg.sender,
@@ -34,7 +32,7 @@ contract  CharityProposal is ICharityProposal {
             _targetAmount,
             false
         );
-        infraStorage.proposals.push(_hashProposal);
+        LibInfraFundStorage.infraFundStorage().proposals.push(_hashProposal);
         
         emit RegisterCharityProposal(_symbol, _hashProposal);
     }
@@ -47,21 +45,16 @@ contract  CharityProposal is ICharityProposal {
         uint256 _duration,
         uint256 _targetAmount
         ) external {
-        LibInfraFundStorage.InfraFundStorage storage infraStorage = LibInfraFundStorage.infraFundStorage();
 
-        require(infraStorage.verifiedClients[msg.sender], "Not White Listed");
-        require(infraStorage.charityProjects[_oldHashProposal].proposer == msg.sender, "You are not proposer for this proposal");
-        require(!infraStorage.charityProjects[_oldHashProposal].isVerified, "Your proposal already verified , cant change current proposal");
+        require(LibInfraFundStorage.infraFundStorage().verifiedClients[msg.sender], "Not White Listed");
+        require(LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].proposer == msg.sender, "You are not proposer for this proposal");
+        require(!LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].isVerified, "Your proposal already verified , cant change current proposal");
 
-        LibInfraFundStorage.CharityProject memory tmpProject = infraStorage.charityProjects[_oldHashProposal];
+        LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].startTime = _startTime;
+        LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].duration = _duration;
+        LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].targetAmount = _targetAmount;
+        LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].GC = _GC;
 
-        tmpProject.startTime = _startTime;
-        tmpProject.duration = _duration;
-        tmpProject.targetAmount = _targetAmount;
-        tmpProject.GC = _GC;
-
-        infraStorage.charityProjects[_newHashProposal] = tmpProject;
-        
         emit ModifyCharityProposal(_oldHashProposal, _newHashProposal);
     }
 
