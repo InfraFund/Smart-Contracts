@@ -3,6 +3,7 @@
 
 
     library LibInfraFundStorage {
+
         bytes32 constant STORAGE_POSITION = keccak256("infrafund.storage");
         
         struct CharityProject{
@@ -10,20 +11,73 @@
             string symbol;
             address proposer;
             address contractAddress;
-            address GC;
-            uint startTime;
-            uint duration;
-            uint targetAmount;
+            address gc;
+            uint256 startTime;
+            uint256 investmentPeriod;
+            uint256 targetAmount;
+            Stages[] stages;
             bool isVerified;
+            bool exist;
+        }
+        struct LoanProject{
+            string name;
+            string symbol;
+            address proposer;
+            address contractAddress;
+            address gc;
+            uint256 startTime;
+            uint256 investmentPeriod;
+            uint256 targetAmount;
+            Stages[] stages;
+            bool isVerified;
+            bool exist;
+        }
+        struct PresaleProject{
+            string name;
+            string symbol;
+            address proposer;
+            address contractAddress;
+            address gc;
+            uint256 startTime;
+            uint256 investmentPeriod;
+            uint256 targetAmount;
+            Stages[] stages;
+            bool isVerified;
+            bool exist;
+        }
+        struct SecurityTokenProject{
+            string name;
+            string symbol;
+            address proposer;
+            address contractAddress;
+            address gc;
+            uint256 startTime;
+            uint256 investmentPeriod;
+            uint256 targetAmount;
+            Stages[] stages;
+            bool isVerified;
+            bool exist;
         }
 
-        struct GCProposal{
+        struct Stages {
             uint256 neededFund;
-            uint64 proposedTime;
-            uint64 votingDuration;
-            uint128 voteCount;
-            bool isVerified;
+            uint256 proposedTime;
         }
+
+        struct GCStages {
+            uint256 neededFund;
+            uint256 proposedTime;
+            uint256 neededExteraFund;
+            bool isClaimed;
+            bool isVerfied;
+            bool isClaimedExteraFund;
+            bool isVerfiedExteraFund;
+        }
+        
+        uint CHARITY = 1;
+        uint LOAN = 2;
+        uint PRESALE = 3;
+        uint SECURITY_TOKEN = 4;
 
 
         event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -61,24 +115,31 @@
         }
 
 
-
         struct InfraFundStorage {
 
             string[] proposals;
             uint256 proposalFee;
+            uint256 totalInvestment;
 
             mapping(address => bool) verifiedClients;
             mapping(address => bool) auditors;
             mapping(address => bool) investors;
             mapping(address => bool) generalConstructors;
 
+            mapping(string => uint256) projectBalance;
+            mapping(string => mapping(address => uint256)) amountOfInvestment;
+            mapping(address => string[]) listProjectsPerAddress;
+    
+            mapping(string => uint8) projectType;
             mapping(string => CharityProject) charityProjects;
-            mapping(string =>  GCProposal) gcProposals;
+            mapping(string => LoanProject) loanProjects;
+            mapping(string => PresaleProject) presaleProjects;
+            mapping(string => SecurityTokenProject) securityProjects;
             
             address contractOwner;
-
+            address tokenPayment;
         }
- 
+
 
         function infraFundStorage() internal pure returns (InfraFundStorage storage st) {
             bytes32 position = STORAGE_POSITION;
