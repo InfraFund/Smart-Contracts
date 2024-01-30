@@ -12,46 +12,60 @@ contract GeneralConstructor is IGeneralConstructor {
     function claimStageFundByGC(string memory _hashProject, uint256 _stage) external {
 
         require(LibInfraFundStorage.isGC(msg.sender), "GC Is Not Verified");
-        require(LibInfraFundStorage.infraFundStorage().projects[_hashProject] != 0, "The Project Proposal Not Exist");
-        require(_stage < LibInfraFundStorage.infraFundStorage().projects[_hashProject].stages.length() , "The Project Stage Number Not Exist");
-        require(!LibInfraFundStorage.infraFundStorage().projects[_hashProject].stages[_stage].isClaim , "The Stage Already Claimed");
+        require(LibInfraFundStorage.infraFundStorage().projectType[_hashProject] != 0, "The Project Proposal Not Exist");
 
 
-        if (LibInfraFundStorage.infraFundStorage().projects[_hashProject] == LibInfraFundStorage.infraFundStorage().CHARITY) {
+        if (LibInfraFundStorage.infraFundStorage().projectType[_hashProject] == LibInfraFundStorage.infraFundStorage().CHARITY) {
+            
             require(LibInfraFundStorage.infraFundStorage().charityProjects[_hashProject].stages[_stage].isVerfied, "The Stage Claim Not Confirm By Auditor");
+            require(_stage < LibInfraFundStorage.infraFundStorage().charityProjects[_hashProject].stages.length , "The Project Stage Number Not Exist");
+            require(!LibInfraFundStorage.infraFundStorage().charityProjects[_hashProject].stages[_stage].isClaimed , "The Stage Already Claimed");
+
             IERC20(LibInfraFundStorage.infraFundStorage().tokenPayment).transferFrom(
                 address(this), 
                 msg.sender, 
                 LibInfraFundStorage.infraFundStorage().charityProjects[_hashProject].stages[_stage].neededFund    
             );
-            LibInfraFundStorage.infraFundStorage().charityProjects[_hashProject].stages[_stage].isClaim = true;
+            LibInfraFundStorage.infraFundStorage().charityProjects[_hashProject].stages[_stage].isClaimed = true;
         
-        } else if (LibInfraFundStorage.infraFundStorage().projects[_hashProject] == LibInfraFundStorage.infraFundStorage().LOAN) {
+        } else if (LibInfraFundStorage.infraFundStorage().projectType[_hashProject] == LibInfraFundStorage.infraFundStorage().LOAN) {
+            
             require(LibInfraFundStorage.infraFundStorage().loanProjects[_hashProject].stages[_stage].isVerfied, "The Stage Claim Not Confirm By Auditor");
+            require(_stage < LibInfraFundStorage.infraFundStorage().loanProjects[_hashProject].stages.length , "The Project Stage Number Not Exist");
+            require(!LibInfraFundStorage.infraFundStorage().loanProjects[_hashProject].stages[_stage].isClaimed , "The Stage Already Claimed");
+            
             IERC20(LibInfraFundStorage.infraFundStorage().tokenPayment).transferFrom(
                 address(this), 
                 msg.sender, 
                 LibInfraFundStorage.infraFundStorage().loanProjects[_hashProject].stages[_stage].neededFund
             );
-            LibInfraFundStorage.infraFundStorage().loanProjects[_hashProject].stages[_stage].isClaim = true;
+            LibInfraFundStorage.infraFundStorage().loanProjects[_hashProject].stages[_stage].isClaimed = true;
         
-        } else if (LibInfraFundStorage.infraFundStorage().projects[_hashProject] == LibInfraFundStorage.infraFundStorage().PRESALE) {
+        } else if (LibInfraFundStorage.infraFundStorage().projectType[_hashProject] == LibInfraFundStorage.infraFundStorage().PRESALE) {
+            
             require(LibInfraFundStorage.infraFundStorage().presaleProjects[_hashProject].stages[_stage].isVerfied, "The Stage Claim Not Confirm By Auditor");
+            require(_stage < LibInfraFundStorage.infraFundStorage().presaleProjects[_hashProject].stages.length , "The Project Stage Number Not Exist");
+            require(!LibInfraFundStorage.infraFundStorage().presaleProjects[_hashProject].stages[_stage].isClaimed , "The Stage Already Claimed");
+            
             IERC20(LibInfraFundStorage.infraFundStorage().tokenPayment).transferFrom(
                 address(this), 
                 msg.sender, 
                 LibInfraFundStorage.infraFundStorage().presaleProjects[_hashProject].stages[_stage].neededFund
             );
-            LibInfraFundStorage.infraFundStorage().presaleProjects[_hashProject].stages[_stage].isClaim = true;
+            LibInfraFundStorage.infraFundStorage().presaleProjects[_hashProject].stages[_stage].isClaimed = true;
         
-        } else if (LibInfraFundStorage.infraFundStorage().projects[_hashProject] == LibInfraFundStorage.infraFundStorage().SECURITY_TOKEN) {
+        } else if (LibInfraFundStorage.infraFundStorage().projectType[_hashProject] == LibInfraFundStorage.infraFundStorage().SECURITY_TOKEN) {
+            
             require(LibInfraFundStorage.infraFundStorage().securityProjects[_hashProject].stages[_stage].isVerfied, "The Stage Claim Not Confirm By Auditor");
+            require(_stage < LibInfraFundStorage.infraFundStorage().securityProjects[_hashProject].stages.length , "The Project Stage Number Not Exist");
+            require(!LibInfraFundStorage.infraFundStorage().securityProjects[_hashProject].stages[_stage].isClaimed , "The Stage Already Claimed");
+            
             IERC20(LibInfraFundStorage.infraFundStorage().tokenPayment).transferFrom(
                 address(this), 
                 msg.sender, 
                 LibInfraFundStorage.infraFundStorage().securityProjects[_hashProject].stages[_stage].neededFund
             );
-            LibInfraFundStorage.infraFundStorage().securityProjects[_hashProject].stages[_stage].isClaim = true;
+            LibInfraFundStorage.infraFundStorage().securityProjects[_hashProject].stages[_stage].isClaimed = true;
         }
 
         emit ClaimStageFundByGC(_hashProject, _stage);

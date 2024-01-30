@@ -5,11 +5,6 @@ import { LibInfraFundStorage } from "../libraries/LibInfraFundStorage.sol";
 
 interface IGeneralConstructor {
     
-    function registerGCProposal(
-        string memory _hashProposal,
-        LibInfraFundStorage.GCStages[] memory stages,
-        uint256 _totalNeedFund,
-        uint256 _totalProposedTime
-        ) external;
+    function claimStageFundByGC(string memory _hashProject, uint256 _stage) external;
 
 }

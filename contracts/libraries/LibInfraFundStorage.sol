@@ -15,7 +15,7 @@
             uint256 startTime;
             uint256 investmentPeriod;
             uint256 targetAmount;
-            Stages[] stages;
+            GCStages[] stages;
             bool isVerified;
             bool exist;
         }
@@ -28,7 +28,7 @@
             uint256 startTime;
             uint256 investmentPeriod;
             uint256 targetAmount;
-            Stages[] stages;
+            GCStages[] stages;
             bool isVerified;
             bool exist;
         }
@@ -41,7 +41,7 @@
             uint256 startTime;
             uint256 investmentPeriod;
             uint256 targetAmount;
-            Stages[] stages;
+            GCStages[] stages;
             bool isVerified;
             bool exist;
         }
@@ -54,7 +54,7 @@
             uint256 startTime;
             uint256 investmentPeriod;
             uint256 targetAmount;
-            Stages[] stages;
+            GCStages[] stages;
             bool isVerified;
             bool exist;
         }
@@ -73,12 +73,7 @@
             bool isClaimedExteraFund;
             bool isVerfiedExteraFund;
         }
-        
-        uint CHARITY = 1;
-        uint LOAN = 2;
-        uint PRESALE = 3;
-        uint SECURITY_TOKEN = 4;
-
+    
 
         event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
@@ -116,6 +111,11 @@
 
 
         struct InfraFundStorage {
+
+            uint8 CHARITY;
+            uint8 LOAN;
+            uint8 PRESALE;
+            uint8 SECURITY_TOKEN;
 
             string[] proposals;
             uint256 proposalFee;

@@ -13,11 +13,11 @@ contract Auditor is IAuditor {
         require(LibInfraFundStorage.isAuditor(msg.sender), "Your Not Auditor");
         require(!LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].isVerified, "Your proposal already verified");
         require(
-            LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].investmentStartTime + LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].investmentPeriod < block.timestamp, 
+            LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].investmentPeriod + LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].investmentPeriod < block.timestamp, 
             "This Proposal Has Expired");
 
         LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].isVerified = true;
-        LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].investmentStartTime = block.timestamp;
+        LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].investmentPeriod = block.timestamp;
 
         emit VerifyProposal(msg.sender, _hashProposal);
     }

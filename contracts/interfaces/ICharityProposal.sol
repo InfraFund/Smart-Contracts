@@ -11,8 +11,8 @@ interface ICharityProposal {
         string memory _hashProposal,
         uint256 _investmentPeriod, 
         uint256 _targetAmount,
-        address _GC,
-        LibInfraFundStorage.GCStages[] memory _stages
+        address _gc,
+        LibInfraFundStorage.Stages[] memory _stages
         ) external;
 
     function modifyCharityProposal(
@@ -20,7 +20,7 @@ interface ICharityProposal {
         string memory _newHashProposal,
         uint256 _investmentPeriod,
         uint256 _targetAmount,
-        address _GC,
-        LibInfraFundStorage.GCStages[] memory _stages
+        address _gc,
+        LibInfraFundStorage.Stages[] memory _stages
         ) external;
 }
