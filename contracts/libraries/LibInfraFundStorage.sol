@@ -1,5 +1,5 @@
     // SPDX-License-Identifier: MIT
-    pragma solidity 0.8.19;
+    pragma solidity 0.8.20;
 
 
     library LibInfraFundStorage {
@@ -10,14 +10,14 @@
             string name;
             string symbol;
             address proposer;
-            address contractAddress;
             address gc;
-            uint256 startTime;
-            uint256 investmentPeriod;
-            uint256 targetAmount;
+            address contractAddress;
+            address nftAddress;
+            string nftURI;
+            uint256 endOfInvestmentPeriodTime;
+            uint256 targetAmountOfCapital;
             GCStages[] stages;
             bool isVerified;
-            bool exist;
         }
         struct LoanProject{
             string name;
@@ -58,22 +58,24 @@
             bool isVerified;
             bool exist;
         }
-
-        struct Stages {
-            uint256 neededFund;
-            uint256 proposedTime;
-        }
-
         struct GCStages {
             uint256 neededFund;
-            uint256 proposedTime;
-            uint256 neededExteraFund;
-            bool isClaimed;
-            bool isVerfied;
-            bool isClaimedExteraFund;
-            bool isVerfiedExteraFund;
+            uint256 proposedFinishTime;
+            uint256 KPI;
         }
-    
+        struct AddressStruct {
+            address userFacetAddress;
+            address proposer;
+            address nftAddress;
+            address gc;
+            address tokenPayment;
+        }        
+        struct StringStruct {
+            string hashProposal;
+            string symbol;
+            string nftURI;
+            string name;
+        }
 
         event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
@@ -128,7 +130,7 @@
 
             mapping(string => uint256) projectBalance;
             mapping(string => mapping(address => uint256)) amountOfInvestment;
-            mapping(address => string[]) listProjectsPerAddress;
+            // mapping(address => string[]) listProjectsPerAddress;
     
             mapping(string => uint8) projectType;
             mapping(string => CharityProject) charityProjects;
