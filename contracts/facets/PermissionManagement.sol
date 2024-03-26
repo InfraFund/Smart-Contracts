@@ -21,7 +21,7 @@ contract PermissionManagement is IPermissionManagement {
     event RevokeClient(address indexed client);
 
     function registerAuditor(address _newAuditor) external {
-            
+
         require(LibDiamond.contractOwner() == msg.sender, "Not Permission");
         require(!LibInfraFundStorage.isAuditor(_newAuditor), "Auditor Already Exists");
 

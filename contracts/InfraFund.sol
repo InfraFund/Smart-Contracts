@@ -16,7 +16,6 @@ $$$$$$/ $$/   $$/ $$/     $$/       $$$$$$$/       $$/      $$$$$$/  $$/   $$/  
 
 import { LibDiamond } from "./libraries/LibDiamond.sol";
 import { IDiamondCut } from "./interfaces/IDiamondCut.sol";
-import { LibInfraFundStorage } from "./libraries/LibInfraFundStorage.sol";
 
 contract InfraFund {    
 
@@ -32,10 +31,6 @@ contract InfraFund {
             action: IDiamondCut.FacetCutAction.Add, 
             functionSelectors: functionSelectors
         });
-        LibInfraFundStorage.infraFundStorage().CHARITY = 1;
-        LibInfraFundStorage.infraFundStorage().LOAN = 2;
-        LibInfraFundStorage.infraFundStorage().PRESALE = 3;
-        LibInfraFundStorage.infraFundStorage().SECURITY_TOKEN = 4;
         LibDiamond.diamondCut(cut, address(0), "");        
     }
 
