@@ -112,6 +112,27 @@
         }
 
 
+        modifier AuditorOnly(address _auditor) {
+            require(LibInfraFundStorage.isAuditor(_auditor), "Your Not Auditor");
+            _;
+        }
+
+        modifier InvestorOnly(address _investor) {
+            require(LibInfraFundStorage.isInvestor(_investor), "Your Not Investor");
+            _;
+        }
+
+        modifier GCOnly(address _gc) {
+            require(LibInfraFundStorage.isGC(_gc), "Your Not GC");
+            _;
+        }
+        
+        modifier ClientOnly(address _client) {
+            require(LibInfraFundStorage.isVerifiedClient(_client), "Your Not Client");
+            _;
+        }
+
+
         struct InfraFundStorage {
 
             uint8 CHARITY;
