@@ -48,6 +48,21 @@ contract CharityContract {
     mapping(address => bool) public investorClaimedNFT;
     bool public gcAgreement;
 
+    modifier AuditorOnly(address _auditor) {
+        require(IUserData(userFacetAddress).isAuditor(_auditor), "Your Not Investor");
+        _;
+    }
+
+    modifier InvestorOnly(address _investor) {
+        require(IUserData(userFacetAddress).isInvestor(_investor), "Your Not Investor");
+        _;
+    }
+
+    modifier GCOnly(address _gc) {
+        require(IUserData(userFacetAddress).isGC(_gc), "Your Not GC");
+        _;
+    }
+
     event InvestmentToCharity(address indexed investor, uint256 amount);
     event ClaimedNFT(address indexed investor);
     event RevokeInvestment(address indexed investor);
@@ -97,7 +112,7 @@ contract CharityContract {
         campaignStartTime = block.timestamp;
     }
 
-    function invest(uint256 _amount) LibInfraFundStorage.InvestorOnly(msg.sender) external {
+    function invest(uint256 _amount) InvestorOnly(msg.sender) external {
 
         require(_amount + currentCampaignBalance > targetAmountOfCapital, "Amount Is More Than Target Amount");
         require(block.timestamp > endOfInvestmentPeriodTime, "Investment Time Has Expired");
@@ -114,7 +129,7 @@ contract CharityContract {
         emit InvestmentToCharity(msg.sender, _amount);
     }
 
-    function claimNFT() LibInfraFundStorage.InvestorOnly(msg.sender) external {
+    function claimNFT() InvestorOnly(msg.sender) external {
 
         require(endOfInvestmentPeriodTime <= block.timestamp, "Investment Time Not Complated");
         require(investorBalance[msg.sender] > 0, "Your Not Investor in this Project");
@@ -126,7 +141,7 @@ contract CharityContract {
         emit ClaimedNFT(msg.sender);
     }
 
-    function revokeInvestment() LibInfraFundStorage.InvestorOnly(msg.sender) external {
+    function revokeInvestment() InvestorOnly(msg.sender) external {
         
         require(block.timestamp > endOfInvestmentPeriodTime , "Investment Time Not Complated");
         require(investorBalance[msg.sender] > 0, "You'r not have a balance in this project");
@@ -138,7 +153,7 @@ contract CharityContract {
         emit RevokeInvestment(msg.sender);
     }
 
-    function verifySignature(bytes memory signature ) LibInfraFundStorage.GCOnly(msg.sender) external {
+    function verifySignature(bytes memory signature ) GCOnly(msg.sender) external {
 
         require(targetAmountOfCapital < currentCampaignBalance , "Target not to reach fund");
         require(block.timestamp > endOfInvestmentPeriodTime , "Investment Time Not Complated");
@@ -153,7 +168,7 @@ contract CharityContract {
         emit SignAgreement(msg.sender);
     }
 
-    function verifyStage(uint256 _stage) LibInfraFundStorage.AuditorOnly(msg.sender) external {
+    function verifyStage(uint256 _stage) AuditorOnly(msg.sender) external {
         
         require(gcAgreement, "Agreement not signed by GC");
         require(_stage < stages.length, "Stage is not exists");
@@ -165,7 +180,7 @@ contract CharityContract {
         emit StageVerified(msg.sender, _stage);
     }
 
-    function withdrawByGC(uint256 _stage) LibInfraFundStorage.GCOnly(msg.sender) external {
+    function withdrawByGC(uint256 _stage) GCOnly(msg.sender) external {
 
         require(_stage < stages.length, "Stage is not exists");
         require(stages[_stage].isVerfied, "Stage is not verified");
@@ -178,7 +193,7 @@ contract CharityContract {
         emit GCWithdraw(msg.sender, _stage);
     }
 
-    function requestExtraFund(uint256 _stage, uint256 _extraFund, string memory _hashPropoal) LibInfraFundStorage.GCOnly(msg.sender) external {
+    function requestExtraFund(uint256 _stage, uint256 _extraFund, string memory _hashPropoal) GCOnly(msg.sender) external {
 
         require(_stage < stages.length, "Stage is not exists");
         require(stages[_stage].isVerfied, "Stage is not verified yet!");
@@ -190,7 +205,7 @@ contract CharityContract {
         emit RequestExtraFund(msg.sender, _stage, _hashPropoal, _extraFund);
     }
 
-    function verifyExtraFund(uint256 _stage) LibInfraFundStorage.AuditorOnly(msg.sender) external {
+    function verifyExtraFund(uint256 _stage) AuditorOnly(msg.sender) external {
         
         require(_stage < stages.length, "Stage is not exists");
         require(!stages[_stage].isVerfiedExtraFund, "Extrafund Already Verified");
@@ -200,7 +215,7 @@ contract CharityContract {
         emit ExtraFundVerified(msg.sender, _stage);
     }
 
-    function acceptExtraFundProposalByInvestors(uint256 _stage) LibInfraFundStorage.InvestorOnly(msg.sender) external {
+    function acceptExtraFundProposalByInvestors(uint256 _stage) InvestorOnly(msg.sender) external {
         
         require(investorBalance[msg.sender] > 0, "You Not Permission");
         require(_stage < stages.length, "This stage is not exists");
@@ -211,7 +226,7 @@ contract CharityContract {
         investorVote[msg.sender][_stage] = true;
     }
 
-    function withdrawExtraFundByGC(uint256 _stage) LibInfraFundStorage.GCOnly(msg.sender) external {
+    function withdrawExtraFundByGC(uint256 _stage) GCOnly(msg.sender) external {
         
         require(_stage < stages.length, "Stage is not exists");
         require(stages[_stage].isVerfiedExtraFund, "ExtraFund Stage Not Verified");
