@@ -24,10 +24,9 @@ contract  CharityPortal is ICharityPortal {
         uint256 _targetAmountOfCapital,
         address _gc,
         LibInfraFundStorage.GCStages[] memory _stages
-        ) external {
+        ) external LibInfraFundStorage.ClientOnly(msg.sender) {
         
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].proposer == address(0), "This Proposal Hash Already Exist");
-        require(LibInfraFundStorage.isVerifiedClient(msg.sender), "Client Is Not Verified");
         require(LibInfraFundStorage.isGC(_gc), "GC Is Not Verified");
         
         IERC20(LibInfraFundStorage.infraFundStorage().tokenPayment).transferFrom(msg.sender, address(this), LibInfraFundStorage.infraFundStorage().proposalFee);
@@ -63,10 +62,9 @@ contract  CharityPortal is ICharityPortal {
         uint256 _targetAmountOfCapital,
         address _gc,
         LibInfraFundStorage.GCStages[] memory _stages
-        ) external {
+        ) external LibInfraFundStorage.ClientOnly(msg.sender) {
 
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].proposer != address(0), "This Charity Proposal Hash Not Exist");
-        require(LibInfraFundStorage.infraFundStorage().verifiedClients[msg.sender], "Client Is Not Verified");
         require(LibInfraFundStorage.isGC(_gc), "GC Is Not Verified");
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].proposer == msg.sender, "You Are Not Proposer For This Proposal");
         require(!LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].isVerified, "After Verified ,Cant Change Proposal");
@@ -86,9 +84,8 @@ contract  CharityPortal is ICharityPortal {
         emit ModifyCharityProposal(_oldHashProposal, _newHashProposal);
     }
 
-    function verifyCharityProposal(string memory _hashProposal, string memory _nftURI) external {
+    function verifyCharityProposal(string memory _hashProposal, string memory _nftURI) LibInfraFundStorage.AuditorOnly(msg.sender) external {
 
-        require(LibInfraFundStorage.isAuditor(msg.sender), "Your Not Auditor");
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].proposer != address(0), "This Charity Proposal Hash Not Exist");
         require(!LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].isVerified, "This Proposal Already Verified");
 
