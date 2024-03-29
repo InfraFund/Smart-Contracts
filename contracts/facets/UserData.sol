@@ -9,16 +9,16 @@ contract UserData {
         return address(this);
     }
 
-    function isInvestor(address _investor) external returns(bool) {
+    function isInvestor(address _investor) external view returns(bool) {
         return LibInfraFundStorage.isInvestor(_investor);
     }
-    function isClient(address _client) external returns(bool) {
+    function isClient(address _client) external view returns(bool) {
         return LibInfraFundStorage.isVerifiedClient(_client);
     }
-    function isAuditor(address _auditor) external returns(bool) {
+    function isAuditor(address _auditor) external view returns(bool) {
         return LibInfraFundStorage.isAuditor(_auditor);
     }
-    function isGC(address _GC) external returns(bool) {
+    function isGC(address _GC) external view returns(bool) {
         return LibInfraFundStorage.isGC(_GC);
     }
 
