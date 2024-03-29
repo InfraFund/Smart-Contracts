@@ -16,6 +16,18 @@ contract  CharityPortal is ICharityPortal {
     event ModifyCharityProposal(string indexed oldHashProposal, string indexed newHashProposal);
     event VerifyCharityProposal(address indexed auditor, address indexed charityContractAddress, string indexed _hashProposal);
 
+
+        modifier AuditorOnly(address _auditor) {
+            require(LibInfraFundStorage.isAuditor(_auditor), "Your Not Auditor");
+            _;
+        }
+
+        modifier ClientOnly(address _client) {
+            require(LibInfraFundStorage.isVerifiedClient(_client), "Your Not Client");
+            _;
+        }
+
+
     function registerCharityProposal(
         string memory _name,
         string memory _symbol,
@@ -24,7 +36,7 @@ contract  CharityPortal is ICharityPortal {
         uint256 _targetAmountOfCapital,
         address _gc,
         LibInfraFundStorage.GCStages[] memory _stages
-        ) external LibInfraFundStorage.ClientOnly(msg.sender) {
+        ) external ClientOnly(msg.sender) {
         
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].proposer == address(0), "This Proposal Hash Already Exist");
         require(LibInfraFundStorage.isGC(_gc), "GC Is Not Verified");
@@ -62,7 +74,7 @@ contract  CharityPortal is ICharityPortal {
         uint256 _targetAmountOfCapital,
         address _gc,
         LibInfraFundStorage.GCStages[] memory _stages
-        ) external LibInfraFundStorage.ClientOnly(msg.sender) {
+        ) external ClientOnly(msg.sender) {
 
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_oldHashProposal].proposer != address(0), "This Charity Proposal Hash Not Exist");
         require(LibInfraFundStorage.isGC(_gc), "GC Is Not Verified");
@@ -84,7 +96,7 @@ contract  CharityPortal is ICharityPortal {
         emit ModifyCharityProposal(_oldHashProposal, _newHashProposal);
     }
 
-    function verifyCharityProposal(string memory _hashProposal, string memory _nftURI) LibInfraFundStorage.AuditorOnly(msg.sender) external {
+    function verifyCharityProposal(string memory _hashProposal, string memory _nftURI) AuditorOnly(msg.sender) external {
 
         require(LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].proposer != address(0), "This Charity Proposal Hash Not Exist");
         require(!LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].isVerified, "This Proposal Already Verified");
