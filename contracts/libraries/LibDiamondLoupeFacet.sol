@@ -11,10 +11,10 @@ library LibDiamondLoupeFacet {
         facetFunctionSelectors_ = ds.facetFunctionSelectors[_facet].functionSelectors;
     }
 
-    function facetAddresses() internal view returns (address[] memory facetAddresses_) {
-        LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
-        facetAddresses_ = ds.facetAddresses;
-    }
 
+    function facetAddress(bytes4 _functionSelector) internal view returns (address facetAddress_) {
+        LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
+        facetAddress_ = ds.selectorToFacetAndPosition[_functionSelector].facetAddress;
+    }
 
 }
