@@ -102,7 +102,7 @@ contract  CharityPortal is ICharityPortal {
             LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].targetAmountOfCapital,
             LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].endOfInvestmentPeriodTime,
             LibInfraFundStorage.AddressStruct(
-                LibDiamondLoupeFacet.facetAddress(UserData.userDataConst.selector), 
+                LibDiamondLoupeFacet.facetAddress(UserData.getAddress.selector), 
                 LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].proposer,
                 address(nftContract),
                 LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].gc,
