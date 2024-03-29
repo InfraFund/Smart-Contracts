@@ -5,7 +5,7 @@ import { LibInfraFundStorage } from "../libraries/LibInfraFundStorage.sol";
 
 contract UserData {
 
-    function userDataConst() external returns(address) {
+    function getAddress() external view returns(address) {
         return address(this);
     }
 
