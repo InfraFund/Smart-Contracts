@@ -2,6 +2,7 @@
 pragma solidity 0.8.20;
 
 import { LibInfraFundStorage } from "../libraries/LibInfraFundStorage.sol";
+import { LibDiamondLoupeFacet } from "../libraries/LibDiamondLoupeFacet.sol";
 import { ICharityPortal } from "../interfaces/ICharityPortal.sol";
 import { IERC20 } from "../interfaces/IERC20.sol";
 import { CharityContract } from "../tokens/CharityContract.sol";
@@ -101,7 +102,7 @@ contract  CharityPortal is ICharityPortal {
             LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].targetAmountOfCapital,
             LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].endOfInvestmentPeriodTime,
             LibInfraFundStorage.AddressStruct(
-                DiamondLoupeFacet.facetAddress(UserData.userDataConst.selector), 
+                LibDiamondLoupeFacet.facetAddress(UserData.userDataConst.selector), 
                 LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].proposer,
                 address(nftContract),
                 LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].gc,
@@ -118,7 +119,7 @@ contract  CharityPortal is ICharityPortal {
         
         LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].contractAddress = address(charityContract);
         LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].nftAddress = address(nftContract);
-        LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].nftURI = nftURI;
+        LibInfraFundStorage.infraFundStorage().charityProjects[_hashProposal].nftURI = _nftURI;
 
         emit VerifyCharityProposal(msg.sender, address(charityContract), _hashProposal);
     }
